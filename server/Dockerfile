@@ -3,7 +3,10 @@ FROM python:3.11-slim
 WORKDIR /srv
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# --retries/--timeout smooth over the transient PyPI/network blips that are
+# common inside Docker Desktop's build VM (a bare "could not find a version"
+# error here is usually that, not a bad pin — retry the build if it recurs).
+RUN pip install --no-cache-dir --retries 5 --timeout 60 -r requirements.txt
 
 COPY app ./app
 
