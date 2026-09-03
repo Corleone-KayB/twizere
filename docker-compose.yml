@@ -1,0 +1,50 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: twizere
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - twizere_pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
+  server:
+    build: ./server
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/twizere
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      # Mounted for live-reload during development (the Dockerfile runs
+      # uvicorn --reload). Remove this mount for a production image so the
+      # container runs the code it was built with.
+      - ./server/app:/srv/app
+
+  client:
+    build: ./client
+    environment:
+      # Points at the backend as reached from the HOST browser, not the
+      # docker-internal service name — the React app runs in the user's
+      # browser, outside the compose network, so "server" would not resolve.
+      VITE_API_URL: http://localhost:8000
+    ports:
+      - "5173:5173"
+    depends_on:
+      - server
+    volumes:
+      # Mounted for hot-reload during development.
+      - ./client/src:/app/src
+      - ./client/index.html:/app/index.html
+
+volumes:
+  twizere_pgdata:

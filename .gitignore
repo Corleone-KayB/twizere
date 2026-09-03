@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+.pytest_cache/
+
+# Node
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Env files (never commit real secrets/config)
+.env
+.env.local
+!**/.env.example
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
+
+# Logs from local (non-docker) runs
+*.log
