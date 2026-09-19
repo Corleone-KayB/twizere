@@ -1,8 +1,32 @@
 # Twizere
 
-**Consented mobile-money credit scoring for Rwanda's underbanked — a full-stack hackathon project.**
+**Consented mobile-money credit scoring for Rwanda's underbanked.**
 
 Twizere lets an MTN Mobile Money or Airtel Money user turn their own transaction history into a loan pre-qualification, and gives a bank or MFI's loan officers a dashboard to review the model's evidence and approve, decline, disburse, and track repayment — end to end.
+
+### ▶ Live demo — **[twizere.vercel.app](https://twizere.vercel.app)**
+
+No sign-in. Two roles, both open — try them in two tabs side by side:
+
+| | |
+|---|---|
+| **Applicant** | Enter any name and phone number, pick a telco, "authorize", and get a pre-qualification with the full scorecard behind it |
+| **Bank dashboard** | [`/dashboard`](https://twizere.vercel.app/dashboard) — review the queue, open an application, approve or decline with a reason, disburse, record repayments |
+
+**Put them side by side.** Apply in one tab, then approve in the other — the
+applicant's status page updates over a WebSocket the moment the officer
+decides. No polling, no refresh.
+
+The phone number you enter *is* the input: the same number always reproduces
+the same synthetic transaction history and therefore the same score, so you
+can retry a profile and get a consistent result. Try a few to land in
+different risk bands.
+
+<sub>Frontend on Vercel, FastAPI backend on Render's free tier — the first
+request after an idle period may take ~30s while the container wakes.</sub>
+
+
+qualification, and gives a bank or MFI's loan officers a dashboard to review the model's evidence and approve, decline, disburse, and track repayment — end to end.
 
 > **This is a school hackathon build. All applicant and transaction data is synthetically generated.** No real MTN or Airtel API is called anywhere in this codebase — see [Synthetic data & scoring](#synthetic-data--scoring) for exactly how the fake data is produced. The intent is to demonstrate the product end-to-end and, if it proves out, to pursue this as a real project — see [From here to production](#from-here-to-production).
 
@@ -119,6 +143,26 @@ twizere/
         ├── context/        # applicant scratch state, theme, shared WebSocket
         └── styles/         # the design system (tokens, light + dark)
 ```
+
+## Scope & honesty
+
+Built in a hackathon and deliberately scoped as a demonstrator, not a
+production lender.
+
+- **All applicant and transaction data is synthetically generated.** No real
+  MTN or Airtel API is called anywhere in this codebase — see
+  [Synthetic data & scoring](#synthetic-data--scoring) for exactly how the data
+  is produced.
+- **No real credential is ever collected.** The "authorize" step is a simulated
+  PIN screen; there is no field, column or log line for a mobile-money PIN.
+- **The scoring engine is a transparent weighted scorecard, not a trained
+  model** — a deliberate choice, explained in
+  [How scoring works](#how-scoring-works).
+- **The model only ever recommends.** Every loan requires a human officer's
+  decision; nothing auto-approves.
+
+The API, data model and scoring interface were designed for the production path
+described below — see [From here to production](#from-here-to-production).
 
 ## From here to production
 
