@@ -26,10 +26,6 @@ different risk bands.
 request after an idle period may take ~30s while the container wakes.</sub>
 
 
-qualification, and gives a bank or MFI's loan officers a dashboard to review the model's evidence and approve, decline, disburse, and track repayment — end to end.
-
-> **This is a school hackathon build. All applicant and transaction data is synthetically generated.** No real MTN or Airtel API is called anywhere in this codebase — see [Synthetic data & scoring](#synthetic-data--scoring) for exactly how the fake data is produced. The intent is to demonstrate the product end-to-end and, if it proves out, to pursue this as a real project — see [From here to production](#from-here-to-production).
-
 <p align="center">
   <img src="docs/screenshots/applicant-landing.png" width="49%" alt="Applicant landing screen" />
   <img src="docs/screenshots/dashboard.png" width="49%" alt="Bank officer dashboard" />
